@@ -56,9 +56,16 @@
     var treeGraph = document.getElementById('tree-graph');
 
     // Set up d3 tree visualization
-    var width = 960;
-    var height = 500;
-    var duration = 750;
+    function getSize() {
+      return {
+        width: treeGraph.clientWidth || window.innerWidth,
+        height: treeGraph.clientHeight || Math.max(400, Math.floor(window.innerHeight * 0.6))
+      };
+    }
+
+    var size = getSize();
+    var width = size.width;
+    var height = size.height;var duration = 750;
     var tree = d3.layout.tree()
       .size([height, width])
       .separation(function() { return 2; });
@@ -382,5 +389,19 @@
           return d.source.x;
         });
     }
+
+    function resize() {
+      var s = getSize();
+      width = s.width;
+      height = s.height;
+
+      outerSvg.attr("viewBox", "0 0 " + width + " " + height);
+      tree.size([height, width]);
+
+      if (root) updateD3Tree();
+    }
+
+    window.addEventListener("resize", resize);
+
   </script>
 </html>

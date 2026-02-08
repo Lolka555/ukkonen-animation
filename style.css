@@ -177,3 +177,16 @@ svg {
 .remainder {
   background-color: #68DA93 !important;
 }
+
+/* Responsive tree graph container */
+#tree-graph {
+  width: 100vw;
+  height: 60vh;
+}
+
+#tree-graph svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
