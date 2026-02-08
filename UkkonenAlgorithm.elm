@@ -1,5 +1,4 @@
-module UkkonenAlgorithm (steps, UkkonenState, initialState, ActivePoint) where
-
+module UkkonenAlgorithm exposing (steps, UkkonenState, initialState, ActivePoint)
 import UkkonenTree exposing (..)
 import Array exposing (..)
 import List exposing (..)
@@ -46,11 +45,11 @@ insert newChar initState =
     let
         state = { initState | string = push newChar initState.string }
     in
-        insert' newChar state
+        insertHelp newChar state
 
 
-insert' : Char -> UkkonenState -> List UkkonenState
-insert' newChar state =
+insertHelp : Char -> UkkonenState -> List UkkonenState
+insertHelp newChar state =
     let
         -- Get convenient references to the state record's fields
         { tree, remainder, activePoint, string, lastSplitNode, charsAdded } = normalizeActivePoint state
@@ -116,7 +115,7 @@ insert' newChar state =
                                                 , remainder = state.remainder - 1
                                             }
                                 in
-                                    newState :: (insert' newChar newState)
+                                    newState :: (insertHelp newChar newState)
 
             -- The case that there is an active edge defined
             Just ( edgeChar, edgeSteps ) ->
@@ -219,10 +218,10 @@ insert' newChar state =
                                             }
                                 in
                                     -- Recurse to insert the next remaining suffix
-                                    newState :: (insert' newChar newState)
+                                    newState :: (insertHelp newChar newState)
 
                     Nothing ->
-                        Debug.crash <| "active_edge is set to a nonexistent edge: " ++ (Basics.toString activePoint)
+                        Debug.todo <| "active_edge is set to a nonexistent edge: " ++ (Debug.toString activePoint)
 
 
 {-| Update the active point to reflect the next suffix to be inserted. If a
@@ -356,8 +355,8 @@ getChar i str =
             c
 
         Nothing ->
-            Debug.crash
+            Debug.todo
                 <| "Tried to look up index "
-                ++ (Basics.toString i)
+                ++ (Debug.toString i)
                 ++ ", which is outside the bounds of "
-                ++ (Basics.toString str)
+                ++ (Debug.toString str)

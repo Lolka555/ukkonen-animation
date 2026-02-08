@@ -50,9 +50,9 @@
 
   <script type="text/javascript">
 
-    // Embed elm code in page
+    // Init Elm app (Elm 0.19)
     var div = document.getElementById('ukkonen-visualization');
-    var ukkonenVisualization = Elm.embed(Elm.UkkonenVisualization, div);
+    var app = Elm.UkkonenVisualization.init({ node: div });
     var treeGraph = document.getElementById('tree-graph');
 
     // Set up d3 tree visualization
@@ -100,7 +100,7 @@
 
     // Subscribe to changes to the tree from elm, and update D3 when the tree
     // data changes
-    ukkonenVisualization.ports.tree.subscribe(function(x) {
+    app.ports.tree.subscribe(function(x) {
       root = formatD3Tree(x, null);
       d3.select("#side-box").style({display: "block"});
 

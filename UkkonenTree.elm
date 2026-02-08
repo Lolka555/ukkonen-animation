@@ -1,5 +1,4 @@
-module UkkonenTree (..) where
-
+module UkkonenTree exposing (..)
 import IntDict exposing (..)
 import Dict exposing (..)
 import String exposing (..)
@@ -52,7 +51,7 @@ getEdge nodeId char tree =
             Dict.get char node.edges
 
         Nothing ->
-            Debug.crash "Active point is set to a node that doesn't exist"
+            Debug.todo "Active point is set to a node that doesn't exist"
 
 
 {-| Add `edge` that starts with `char`
@@ -84,7 +83,7 @@ getNode nodeId tree =
             node
 
         Nothing ->
-            Debug.crash "Tried to reference a node that does't exist"
+            Debug.todo "Tried to reference a node that does't exist"
 
 
 {-| Add a new node to the graph
@@ -115,17 +114,17 @@ setSuffixLink fromId toId tree =
 -}
 toString : UkkonenTree -> String
 toString =
-    toString' 0 0
+    toStringHelp 0 0
 
 
-toString' level rootId tree =
+toStringHelp level rootId tree =
     let
         root = getNode rootId tree
 
         spaces = (String.repeat level "  ")
     in
         spaces
-            ++ (Basics.toString rootId)
+            ++ (String.fromInt rootId)
             ++ newLine
             ++ (String.concat
                     (Dict.values
@@ -133,10 +132,10 @@ toString' level rootId tree =
                             (\edgeLabel ->
                                 \edge ->
                                     spaces
-                                        ++ (Basics.toString edgeLabel)
+                                        ++ (String.fromChar edgeLabel)
                                         ++ "->"
                                         ++ newLine
-                                        ++ (toString'
+                                        ++ (toStringHelp
                                                 (level + 1)
                                                 edge.pointingTo
                                                 tree
@@ -158,14 +157,16 @@ newLine =
 {- Get the string an edge represents -}
 edgeString : UkkonenEdge -> String -> String
 edgeString edge string =
-    let labelEnd = case edge.labelEnd of
-      Definite val -> val
-      EndOfString -> -1
+    let
+        labelEnd =
+            case edge.labelEnd of
+                Definite val ->
+                    val
+
+                EndOfString ->
+                    String.length string
     in
-    slice
-        edge.labelStart
-        labelEnd
-        string
+    String.slice edge.labelStart labelEnd string
 
 
 {-| Gets all suffixes represented in the tree
